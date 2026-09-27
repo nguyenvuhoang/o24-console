@@ -30,7 +30,7 @@ Or provide explicit metadata:
 npx @vknighthub/o24-console init --product EMI --description "EMI Portal"
 ```
 
-The installer creates `src/components/ConsoleSecurityWarning.tsx` and, for standard Next.js App Router layouts, mounts it once in the root layout. Running the command again is safe and will not duplicate the component.
+The installer detects the project's package manager (pnpm, npm, yarn, or bun), installs `@vknighthub/o24-console` as a project dependency when needed, creates `src/components/ConsoleSecurityWarning.tsx`, and, for standard Next.js App Router layouts, mounts it once in the root layout. Running the command again is safe and will not duplicate the dependency, component, or layout mount.
 
 ## Framework-agnostic usage
 
