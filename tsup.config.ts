@@ -21,4 +21,14 @@ export default defineConfig([
     platform: 'browser',
     external: ['react', 'react/jsx-runtime'],
   },
+  {
+    entry: { cli: 'src/cli.ts' },
+    format: ['esm'],
+    dts: false,
+    sourcemap: false,
+    minify: false,
+    treeshake: true,
+    platform: 'node',
+    banner: { js: '#!/usr/bin/env node' },
+  },
 ])
