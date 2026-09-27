@@ -29,6 +29,6 @@ export default defineConfig([
     minify: false,
     treeshake: true,
     platform: 'node',
-    banner: { js: '#!/usr/bin/env node' },
+    banner: { js: '#!/usr/bin/env node\n' },
   },
 ])
