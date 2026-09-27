@@ -16,6 +16,22 @@ Also works with npm or yarn:
 npm install @vknighthub/o24-console
 ```
 
+## Quick init CLI
+
+For React / Next.js projects, initialize O24 Console from the project root:
+
+```bash
+npx @vknighthub/o24-console init EMI
+```
+
+Or provide explicit metadata:
+
+```bash
+npx @vknighthub/o24-console init --product EMI --description "EMI Portal"
+```
+
+The installer creates `src/components/ConsoleSecurityWarning.tsx` and, for standard Next.js App Router layouts, mounts it once in the root layout. Running the command again is safe and will not duplicate the component.
+
 ## Framework-agnostic usage
 
 ```ts
