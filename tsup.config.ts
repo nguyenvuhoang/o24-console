@@ -20,8 +20,11 @@ export default defineConfig([
     treeshake: true,
     platform: 'browser',
     external: ['react', 'react/jsx-runtime'],
-    banner: {
-      js: "'use client';",
+    esbuildOptions(options) {
+      options.banner = {
+        ...options.banner,
+        js: "'use client';",
+      }
     },
   },
 ])
