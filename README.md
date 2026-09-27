@@ -1,4 +1,4 @@
-# @vknight/o24-console
+# @vknighthub/o24-console
 
 O24 Developer Console branding for modern web applications.
 
@@ -7,19 +7,19 @@ O24 Developer Console branding for modern web applications.
 ## Install
 
 ```bash
-pnpm add @vknight/o24-console
+pnpm add @vknighthub/o24-console
 ```
 
 Also works with npm or yarn:
 
 ```bash
-npm install @vknight/o24-console
+npm install @vknighthub/o24-console
 ```
 
 ## Framework-agnostic usage
 
 ```ts
-import { showO24Console } from '@vknight/o24-console'
+import { showO24Console } from '@vknighthub/o24-console'
 
 showO24Console({
   product: 'IPS',
@@ -35,7 +35,7 @@ showO24Console({
 ```tsx
 'use client'
 
-import { O24Console } from '@vknight/o24-console/react'
+import { O24Console } from '@vknighthub/o24-console/react'
 
 export default function ConsoleSecurityWarning() {
   return (
