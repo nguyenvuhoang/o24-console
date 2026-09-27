@@ -1,0 +1,57 @@
+{
+  "name": "@vknight/o24-console",
+  "version": "1.0.0",
+  "description": "O24 developer console branding for modern web applications",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    }
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm build"
+  },
+  "keywords": ["o24", "vknight", "console", "developer-console", "branding", "react", "nextjs"],
+  "author": "vKnight",
+  "license": "MIT",
+  "homepage": "https://vknight.io.vn/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nguyenvuhoang/o24-console.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nguyenvuhoang/o24-console/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
