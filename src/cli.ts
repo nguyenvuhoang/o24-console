@@ -1,6 +1,8 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
+import { spawnSync } from 'node:child_process'
 
+const PACKAGE_NAME = '@vknighthub/o24-console'
 const args = process.argv.slice(2)
 const command = args[0]
 const positionalProduct = args[1]?.startsWith('--') ? undefined : args[1]
@@ -27,6 +29,53 @@ Options:
 `)
 }
 
+function hasDependency(pkg: any, name: string): boolean {
+  return Boolean(
+    pkg.dependencies?.[name] ||
+    pkg.devDependencies?.[name] ||
+    pkg.optionalDependencies?.[name]
+  )
+}
+
+function detectPackageManager(root: string): { name: string; command: string; args: string[] } {
+  if (existsSync(join(root, 'pnpm-lock.yaml'))) {
+    return { name: 'pnpm', command: 'pnpm', args: ['add', PACKAGE_NAME] }
+  }
+  if (existsSync(join(root, 'yarn.lock'))) {
+    return { name: 'yarn', command: 'yarn', args: ['add', PACKAGE_NAME] }
+  }
+  if (existsSync(join(root, 'bun.lockb')) || existsSync(join(root, 'bun.lock'))) {
+    return { name: 'bun', command: 'bun', args: ['add', PACKAGE_NAME] }
+  }
+  return { name: 'npm', command: 'npm', args: ['install', PACKAGE_NAME] }
+}
+
+function installPackage(root: string, projectPackage: any): void {
+  if (hasDependency(projectPackage, PACKAGE_NAME)) {
+    console.log(`✓ ${PACKAGE_NAME} already installed`)
+    return
+  }
+
+  const manager = detectPackageManager(root)
+  console.log(`✓ Detected ${manager.name}`)
+  console.log(`→ Installing ${PACKAGE_NAME}...`)
+
+  const executable = process.platform === 'win32' ? `${manager.command}.cmd` : manager.command
+  const result = spawnSync(executable, manager.args, {
+    cwd: root,
+    stdio: 'inherit',
+    shell: false,
+  })
+
+  if (result.error || result.status !== 0) {
+    console.error(`O24 Console: failed to install ${PACKAGE_NAME} with ${manager.name}.`)
+    if (result.error) console.error(result.error.message)
+    process.exit(result.status || 1)
+  }
+
+  console.log(`✓ Installed ${PACKAGE_NAME}`)
+}
+
 if (command !== 'init') {
   usage()
   process.exit(command ? 1 : 0)
@@ -41,22 +90,20 @@ if (!existsSync(packagePath)) {
 }
 
 const projectPackage = JSON.parse(readFileSync(packagePath, 'utf8'))
-const hasNext = Boolean(projectPackage.dependencies?.next || projectPackage.devDependencies?.next)
-const hasReact = Boolean(projectPackage.dependencies?.react || projectPackage.devDependencies?.react)
+const hasNext = hasDependency(projectPackage, 'next')
+const hasReact = hasDependency(projectPackage, 'react')
 
 if (!hasReact) {
   console.error('O24 Console: this installer currently supports React/Next.js projects.')
   process.exit(1)
 }
 
+installPackage(root, projectPackage)
+
 const product = (option('product') || positionalProduct || projectPackage.name || 'O24').toUpperCase()
 const description = option('description') || (product === 'EMI' ? 'EMI Portal' : product)
 
-const componentCandidates = [
-  join(root, 'src', 'components', 'ConsoleSecurityWarning.tsx'),
-  join(root, 'components', 'ConsoleSecurityWarning.tsx'),
-]
-const componentPath = componentCandidates[0]
+const componentPath = join(root, 'src', 'components', 'ConsoleSecurityWarning.tsx')
 mkdirSync(dirname(componentPath), { recursive: true })
 
 const component = `'use client'
@@ -106,6 +153,7 @@ let layout = readFileSync(layoutPath, 'utf8')
 
 if (layout.includes('<ConsoleSecurityWarning')) {
   console.log(`✓ O24 Console already configured in ${relative(root, layoutPath)}`)
+  console.log(`✓ Product: ${product} — ${description}`)
   process.exit(0)
 }
 
@@ -139,3 +187,4 @@ writeFileSync(layoutPath, layout, 'utf8')
 
 console.log(`✓ Added O24 Console to ${relative(root, layoutPath)}`)
 console.log(`✓ Product: ${product} — ${description}`)
+console.log('✓ O24 Console ready.')
