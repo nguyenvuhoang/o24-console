@@ -9,6 +9,7 @@ export default defineConfig([
     sourcemap: true,
     minify: true,
     treeshake: true,
+    platform: 'browser',
   },
   {
     entry: { react: 'src/react.tsx' },
@@ -17,6 +18,10 @@ export default defineConfig([
     sourcemap: true,
     minify: true,
     treeshake: true,
+    platform: 'browser',
     external: ['react', 'react/jsx-runtime'],
+    banner: {
+      js: "'use client';",
+    },
   },
 ])
