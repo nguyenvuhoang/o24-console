@@ -21,10 +21,12 @@
   },
   "files": ["dist", "README.md", "LICENSE"],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && node scripts/fix-client-directive.mjs && node scripts/verify-package.mjs",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "pnpm build"
+    "verify": "node scripts/verify-package.mjs",
+    "prepack": "pnpm typecheck && pnpm build",
+    "prepublishOnly": "pnpm typecheck && pnpm build"
   },
   "keywords": ["o24", "vknight", "console", "developer-console", "branding", "react", "nextjs"],
   "author": "vKnight",
