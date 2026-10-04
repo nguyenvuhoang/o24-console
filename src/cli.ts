@@ -60,11 +60,13 @@ function installPackage(root: string, projectPackage: any): void {
   console.log(`✓ Detected ${manager.name}`)
   console.log(`→ Installing ${PACKAGE_NAME}...`)
 
-  const executable = process.platform === 'win32' ? `${manager.command}.cmd` : manager.command
-  const result = spawnSync(executable, manager.args, {
+  // npm/pnpm/yarn on Windows are command shims (.cmd). Spawning those
+  // directly with shell:false can fail with EINVAL on some Node versions.
+  // Use the platform shell on Windows; keep direct execution elsewhere.
+  const result = spawnSync(manager.command, manager.args, {
     cwd: root,
     stdio: 'inherit',
-    shell: false,
+    shell: process.platform === 'win32',
   })
 
   if (result.error || result.status !== 0) {
